@@ -1,0 +1,28 @@
+# PCA
+Custom code in Python
+d2 = pd.read_csv('datahw4.csv',engine= 'python',header=None)
+d2 = np.array(d2)
+dat = d2[:,2:]
+dat1 = dat- dat.mean(axis=0)
+cor = np.cov(dat1,rowvar=False)
+evals , evec = sp.linalg.eigh(cor)
+id = np.argsort(evals)[::-1]
+evals = evals[id]
+evec = evec[:,id]
+efin = evec[:,:10]
+final = np.dot(efin.T, dat1.T).T
+
+for i in range(10):
+    C = np.reshape(evec[:,i],(28,28))
+    plt.imshow(C, cmap='gray')
+    plt.savefig('pca'+ str(i) + '.png')              
+              
+pca = np.column_stack((d2[:,1],final))
+data = pca[np.random.randint(pca.shape[0], size=1000), :]
+data = np.array(data)    
+cm = plt.cm.get_cmap('RdYlBu')
+sc = plt.scatter(data[:,1],data[:,2],c = data[:,0],vmin=0, vmax=9, s=35,cmap=cm)
+
+
+plt.colorbar(sc)
+plt.show()
